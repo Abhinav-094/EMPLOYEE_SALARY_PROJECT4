@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Document</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<style>
+    body {
+      background: linear-gradient(135deg, #c3ec52 0%, #0ba29d 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+      padding: 30px;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      animation: slide-in 1s ease-in-out;
+    }
+
+    @keyframes slide-in {
+      from {
+        transform: translateY(-40px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 10px 15px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input[type="text"]:focus, select:focus {
+      background-color: #e0f7fa;
+      color: #000;
+      outline: none;
+      transform: scale(1.02);
+    }
+
+    select {
+      background-color: #ffffff;
+      color: #000;
+      cursor: pointer;
+    }
+
+    select:hover {
+      background-color: #f1f1f1;
+    }
+
+    input[readonly] {
+      background-color: #ccc;
+      color: #333;
+      cursor: not-allowed;
+    }
+
+    .radio-group {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .radio-group input {
+      width: auto;
+    }
+
+    #leapmsg {
+      display: inline-block;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .fade-in {
+      animation: fade-in 0.5s ease-in-out;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    ::placeholder {
+      color: #888;
+    }
+
+    .form-row {
+      margin-bottom: 15px;
+    }
+
+    input[type="text"]:disabled {
+      background-color: #e0e0e0;
+      color: #555;
+    }
+	</style>
+	<script>
+	$(document).ready(function() {
+		$("#year").keypress(function(y) {
+			var KEYCODE = y.which;
+			if(KEYCODE >= 48 && KEYCODE <= 57) {
+				return true;
+			} else {
+				return false;
+			}
+		});
+		$("#epds").keypress(function(e) {
+			var KEYCODE = e.which
+			if(KEYCODE >= 48 && KEYCODE <= 57) {
+				return true;
+			} else {
+				return false;
+			}
+		})
+		$("#ecd").keypress(function(e) {
+			var KEYCODE = e.which
+			if(KEYCODE >= 48 && KEYCODE <= 57) {
+				return true;
+			} else {
+				return false;
+			}
+		})
+		$("#epd").keyup(function() {
+			var TDIM = parseInt($("#tdim").val());
+			var EPDS = parseInt($("#epds").val());
+			var EPD = parseInt($("#epd").val());
+			var EAD = TDIM - EPD;
+			$("#ead").val(EAD);
+		});
+		$("#month_op").change(function() {
+			var YEAR = $("#year").val();
+			var MONTH_OP = $("#month_op").val();
+			if(MONTH_OP == "January" || MONTH_OP == "March" || MONTH_OP == "May" || MONTH_OP == "July" || MONTH_OP == "August" || MONTH_OP == "October" || MONTH_OP == "December") {
+				$("#tdim").val("31");
+			} else if(MONTH_OP == "April" || MONTH_OP == "June" || MONTH_OP == "September" || MONTH_OP == "November") {
+				$("#tdim").val("30");
+			} else if(MONTH_OP == "select_month") {
+				$("#tdim").val("");
+			} else {
+				if((YEAR % 4 == 0 && YEAR % 100 != 0) || YEAR % 400 == 0) {
+					$("#tdim").val("29");
+					$("#leapmsg").text("THIS IS LEAP YEAR");
+					$("#leapmsg").css("color", "white")
+					$("#leapmsg").css("background-color", "green")
+				} else {
+					$("#tdim").val("28");
+					$("#leapmsg").text("THIS IS NOT A LEAP YEAR");
+					$("#leapmsg").css("color", "white")
+					$("#leapmsg").css("background-color", "red")
+				}
+			}
+			if(MONTH_OP == "January") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "Feburay") {
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "March") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "April") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "May") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "June") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "July") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "August") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "September") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "October") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "November") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "December") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			} else if(MONTH_OP == "select_month") {
+				$("#leapmsg").text("");
+				$("#epds").val("");
+				$("#epd").val("");
+				$("#ead").val("");
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#ecd").val("");
+				$("#etpd").val("");
+				$("#etad").val("");
+				$("#es").val("");
+				$("#di_bl").hide("");
+			}
+		});
+		$("#yes_cl").click(function() {
+			$("#di_bl").show();
+			$("#es").val("");
+			$("#etpd").val("");
+			$("#etad").val("");
+			$("#ecd").val("");
+		});
+		$("#no_cl").click(function() {
+			$("#di_bl").hide();
+		});
+		$("#epd").keyup(function() 
+    {
+		var EPD1 = parseInt($("#epd").val());
+			var TDIM = parseInt($("#tdim").val());
+			if(EPD1 <= TDIM) {
+				var EPD1 = parseInt($("#epd").val());
+				var TDIM = parseInt($("#tdim").val());
+				var EAD = TDIM - EPD1;
+				$("#ead").val(EAD);
+			} else {
+				$("#epd").val("");
+				$("#ead").val("");
+			}
+		});
+		$("#ecd").keyup();
+		$("#no_cl").click(function() 
+    {
+		var EPDS = parseInt($("#epds").val());
+			var EPD = parseInt($("#epd").val());
+			var ES = EPDS * EPD;
+			$("#es").val(ES);
+		});
+		$("#di_bl").keyup(function() {
+			var ECD = parseInt($("#ecd").val());
+			var EAD = parseInt($("#ead").val());
+			if(ECD <= EAD) {
+				var EPD = parseInt($("#epd").val());
+				var Ecd = parseInt($("#ecd").val());
+				var etpd = EPD + Ecd;
+				$("#etpd").val(etpd);
+			} else {
+				$("#etad").val("");
+				$("#es").val("");
+				$("#ecd").val("");
+				$("#etpd").val("");
+			}
+		});
+		$("#di_bl").keyup(function() {
+			var ETPD = parseInt($("#etpd").val());
+			var TDIM = parseInt($("#tdim").val());
+			var ETAD = TDIM - ETPD;
+			$("#etad").val(ETAD);
+		});
+		$("#di_bl").keyup(function() {
+			var ETPD = parseInt($("#etpd").val());
+			var EPDS = parseInt($("#epds").val());
+			var ES = ETPD * EPDS;
+			$("#es").val(ES);
+		});
+		$("#year").keyup(function() {
+			var YEAR_VALUE = $("#year").val();
+			var YEAR_LENGTH = YEAR_VALUE.length;
+			if(YEAR_VALUE == "") {
+				$("#month_op").val("select_month");
+				$("#tdim").val("");
+				$("#leapmsg").text("");
+				$("#di_bl").hide("")
+			} else if(YEAR_LENGTH == 4) {
+				$("#month_op").val("select_month");
+				$("#tdim").val("");
+				$("#leapmsg").text("");
+				$("#month_op").prop("disabled", false);
+				$("#epds").prop("disabled", false)
+				$("#epd").prop("disabled", false)
+				$("#ead").prop("disabled", false)
+				$("#es").prop("disabled", false)
+				$("#no_cl").prop("disabled", false);
+				$("#yes_cl").prop("disabled", false);
+				$("#ecd").prop("disabled", false)
+				$("#etpd").prop("disabled", false)
+				$("#etad").prop("disabled", false)
+			} else if(YEAR_LENGTH <= 4 || YEAR_LENGTH >= 5) {
+				$("#month_op").prop("disabled", true);
+        $("#month_op").val("select_month");
+				$("#tdim").val("");
+				$("#leapmsg").text("");
+				$("#epds").val("")
+				$("#epds").prop("disabled", true)
+				$("#epd").val("")
+				$("#epd").prop("disabled", true)
+				$("#ead").val("")
+				$("#ead").prop("disabled", true)
+				$("#es").val("")
+				$("#es").prop("disabled", true)
+				$("#no_cl").prop("checked", false);
+				$("#yes_cl").prop("checked", false);
+				$("#no_cl").prop("disabled", true);
+				$("#yes_cl").prop("disabled", true);
+				$("#ecd").prop("disabled", true)
+				$("#ecd").val("")
+				$("#etpd").prop("disabled", true)
+				$("#etpd").val("")
+				$("#etad").prop("disabled", true)
+				$("#etad").val("")
+				$("#di_bl").hide("")
+			}
+		});
+		$("#epds").keyup(function() {
+			var PRESENT_DAY_SAL_val = $("#epds").val();
+			var PRESENT_DAY_SAL_len = PRESENT_DAY_SAL_val.length;
+			if(PRESENT_DAY_SAL_val == "" || PRESENT_DAY_SAL_val > PRESENT_DAY_SAL_len) {
+				$("#epd").val("")
+				$("#ead").val("")
+				$("#ecd").val("")
+				$("#es").val("")
+				$("#no_cl").prop("checked", false)
+				$("#yes_cl").prop("checked", false)
+				$("#etpd").val("")
+				$("#etad").val("")
+				$("#es").val("")
+				$("#di_bl").hide("")
+			}
+		})
+		$("#epd").keyup(function() {
+			var EM_PRESENT_DAY_VAL = $("#epd").val();
+			var EM_PRESENT_DAY_le = EM_PRESENT_DAY_VAL.length;
+			if(EM_PRESENT_DAY_VAL == "" || EM_PRESENT_DAY_val > EM_PRESENT_DAY_le) {
+				$("#ead").val("")
+				$("#no_cl").prop("checked", false)
+				$("#es").val("")
+				$("#yes_cl").prop("checked", false)
+				$("#etpd").val("")
+				$("#etad").val("")
+				$("#es").val("")
+				$("#ecd").val("")
+				$("#di_bl").hide("")
+			}
+		})
+	});
+	</script>
+	<style>
+	input 
+  {
+		outline: none;
+	}
+	#month_op 
+  {
+		background-color: red;
+	}
+	</style>
+</head>
+
+<body>
+	<center> ENTER YEAR
+		<input type="text" id="year">
+		<br>
+		<br>
+		<select id="month_op" disabled>
+			<option value="select_month">SELECT MONTH</option>
+			<option value="January">January</option>
+			<option value="Feburay">Feburay</option>
+			<option value="March">March</option>
+			<option value="April">April</option>
+			<option value="May">May</option>
+			<option value="June">June</option>
+			<option value="July">July</option>
+			<option value="August">August</option>
+			<option value="September">September</option>
+			<option value="October">October</option>
+			<option value="November">November</option>
+			<option value="December">December</option>
+		</select>
+		<br>
+		<br><span id="leapmsg"></span>
+		<br/>
+		<br/> TOTAL DAYS IN MONTH
+		<input type="text" id="tdim" readonly placeholder="PLS SELECT MONTH" disabled/>
+		<br />
+		<br /> EMPLOYEE PER DAY SALARY
+		<input type="text" id="epds" disabled />
+		<br />
+		<br /> EMPLOYEE PRESENT DAY
+		<input type="text" id="epd" disabled/>
+		<br />
+		<br /> EMPLOYEE ABSENT DAY
+		<input type="text" id="ead" readonly disabled />
+		<br />
+		<br /> ALLOW CL :-
+		<input type="radio" value="yes" name="cl" id="yes_cl" disabled/>YES
+		<input type="radio" value="no" name="cl" id="no_cl" disabled />NO
+		<br />
+		<br />
+		<div style="display: none" id="di_bl"> ENTER CL DAYS
+			<input type="text" id="ecd" disabled />
+			<br />
+			<br /> EMPLOYEE TOTAL PRESENT DAY
+			<input type="text" id="etpd" readonly disabled />
+			<br />
+			<br /> EMPLOYEE TOTAL ABSENT DAY
+			<input type="text" id="etad" disabled/>
+			<br />
+			<br /> </div> EMPLOYE SALARY
+		<input type="text" id="es" readonly disabled/> </center>
+</body>
+
+</html>
